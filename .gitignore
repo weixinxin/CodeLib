@@ -1,0 +1,10 @@
+.vs/
+Library/
+obj/
+Temp/
+Logs/
+Packages/
+ProjectSettings/
+Assembly-CSharp.csproj
+Assembly-CSharp-Editor.csproj
+CodeLib.sln
