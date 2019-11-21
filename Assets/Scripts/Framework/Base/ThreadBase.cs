@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 namespace Framework
 {
     public abstract class ThreadBase
@@ -8,23 +9,54 @@ namespace Framework
         bool mStopFlag = false;
 
         bool mPauseFlag = false;
-        ManualResetEvent mManualResetEvent;
-        protected abstract void MainLoop();
 
+        ManualResetEvent mManualResetEvent;
+        
+        /// <summary>
+        /// 线程开始
+        /// </summary>
+        protected virtual void OnEnter() { }
+        
+        /// <summary>
+        /// 主循环
+        /// </summary>
+        /// <returns>是否继续</returns>
+        protected abstract bool MainLoop();
+
+        /// <summary>
+        /// 线程结束退出
+        /// </summary>
+        protected virtual void OnExit() { }
         void Run()
         {
-            while(!mStopFlag)
+            try
             {
-                if (mPauseFlag)
+                OnEnter();
+                while (!mStopFlag)
                 {
-                    mManualResetEvent = new ManualResetEvent(false);
-                    mManualResetEvent.WaitOne();
-                    mManualResetEvent = null;
+                    if (mPauseFlag)
+                    {
+                        mManualResetEvent = new ManualResetEvent(false);
+                        mManualResetEvent.WaitOne();
+                        mManualResetEvent = null;
+                    }
+                    if (!MainLoop())
+                        break;
                 }
-                MainLoop();
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                OnExit();
             }
         }
 
+        /// <summary>
+        /// 开始执行线程
+        /// </summary>
         public void Start()
         {
             if (mThread == null)
@@ -32,11 +64,17 @@ namespace Framework
             mThread.Start();
         }
 
+        /// <summary>
+        /// 暂停线程
+        /// </summary>
         public void Pause()
         {
             mPauseFlag = true;
         }
 
+        /// <summary>
+        /// 恢复线程
+        /// </summary>
         public void Resume()
         {
             if(mPauseFlag)
@@ -46,19 +84,17 @@ namespace Framework
                     mManualResetEvent.Set();
             }
         }
-
-        protected void ExitLoop()
-        {
-            mStopFlag = true;
-        }
-
+        
+        /// <summary>
+        /// 结束线程
+        /// </summary>
         public void Stop()
         {
             if (mThread != null)
             {
                 mStopFlag = true;
                 Resume();
-                mThread.Join();
+                mThread.Join(100);
                 mThread = null;
             }
         }

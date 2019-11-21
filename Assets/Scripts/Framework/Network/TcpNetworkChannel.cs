@@ -18,6 +18,7 @@ namespace Framework
         }
 
         private static byte[] sBuffer = new byte[PacketHeadLength];
+        
         public static int ReadPacketHead(Stream stream)
         {
             stream.Read(sBuffer, 0, PacketHeadLength);
@@ -39,6 +40,8 @@ namespace Framework
         public AddressFamily AddressFamily { get; protected set; }
 
         public NetworkStatus Status { get; protected set; }
+
+        private Queue<string> ErrorMessages = new Queue<string>(32);
 
         public TcpNetworkChannel(string name, INetworkChannelHandler handler)
         {
@@ -76,6 +79,7 @@ namespace Framework
             if(Status == NetworkStatus.Connected)
                 Status = NetworkStatus.Disconnecting;
             Close();
+
         }
 
         public void Connect(IPAddress ipAddress, int port, object userData)
@@ -112,24 +116,31 @@ namespace Framework
             catch (Exception exception)
             {
                 Status = NetworkStatus.Disconnected;
+
                 SocketException socketException = exception as SocketException;
                 if (socketException != null)
                 {
 
                     mHandler.OnNetworkError(string.Format("socket error code = {0} see detail from https://docs.microsoft.com/en-us/windows/win32/winsock/windows-sockets-error-codes-2"
                         , socketException.ErrorCode));
+                    mHandler.OnConnectResult(false, socketException.ErrorCode);
                     return;
+                }
+                else
+                {
+                    mHandler.OnConnectResult(false, -1);
                 }
                 throw;
             }
 
-            mSendThread = new SendThread(mHandler, Socket);
+            mSendThread = new SendThread(mHandler, Socket, ErrorMessages);
             mSendThread.Start();
 
-            mReceiveThread = new ReceiveThread(mHandler,this);
+            mReceiveThread = new ReceiveThread(mHandler, Socket,ErrorMessages);
             mReceiveThread.Start();
 
             Status = NetworkStatus.Connected;
+            mHandler.OnConnectResult(true, 0);
         }
 
         public void Send<T>(T packet)
@@ -152,7 +163,7 @@ namespace Framework
             HandleReceivedPackets();
         }
 
-        public void HandleReceivedPackets()
+        void HandleReceivedPackets()
         {
             if (mReceiveThread != null)
             {
@@ -167,6 +178,17 @@ namespace Framework
                 }
             }
         }
+
+        void HandleErrorMessage()
+        {
+            lock (ErrorMessages)
+            {
+                while(ErrorMessages.Count > 0)
+                {
+                    mHandler.OnNetworkError(ErrorMessages.Dequeue());
+                }
+            }
+        }
     }
     public class SendThread : ThreadBase, IDisposable
     {
@@ -174,16 +196,18 @@ namespace Framework
         protected INetworkChannelHandler mHandler;
         private SerializerStream mStream;
         private Socket mSocket;
+        private Queue<string> ErrorMessages;
         protected readonly Queue<Object> mSendPacketPool = new Queue<object>(32);
         private bool m_Disposed;
-        public SendThread(INetworkChannelHandler handler, Socket socket)
+        public SendThread(INetworkChannelHandler handler, Socket socket, Queue<string> errorMsg)
         {
+            ErrorMessages = errorMsg;
             mHandler = handler;
             mSocket = socket;
             mStream = new SerializerStream(DefaultBufferLength);
         }
 
-        protected override void MainLoop()
+        protected override bool MainLoop()
         {
             while (mSendPacketPool.Count > 0)
             {
@@ -197,7 +221,7 @@ namespace Framework
                 if (!mHandler.SerializePacket(packet, mStream))
                 {
                     mHandler.OnNetworkError("Serialized packet failure.");
-                    return;
+                    return false;
                 }
                 int packetLength = (int)mStream.Position - TcpNetworkChannel.PacketHeadLength;
                 mStream.SetPosition(0);
@@ -214,13 +238,14 @@ namespace Framework
 
                         mHandler.OnNetworkError(string.Format("socket error code = {0} see detail from https://docs.microsoft.com/en-us/windows/win32/winsock/windows-sockets-error-codes-2"
                             , socketException.ErrorCode));
-                        return;
+                        return false;
                     }
                     throw;
                 }
 
             }
             Pause();
+            return true;
         }
 
         public void Send(Object packet)
@@ -231,6 +256,15 @@ namespace Framework
             }
             Resume();
         }
+
+        void OnNetworkError(string msg)
+        {
+            lock (ErrorMessages)
+            {
+                ErrorMessages.Enqueue(msg);
+            }
+        }
+
         public void Dispose()
         {
             Dispose(true);
@@ -261,53 +295,60 @@ namespace Framework
     {
         private const int DefaultBufferLength = 1024 * 64;
         private SerializerStream mStream;
-        private TcpNetworkChannel mChannel;
+        private Socket mSocket;
         protected INetworkChannelHandler mHandler;
 
         private bool mProcessPacketHeader = true;
 
         public Queue<Object> ReceivePackets = new Queue<object>(32);
-
-        private int mReceiveSize = 0;
         private bool m_Disposed;
-        public ReceiveThread(INetworkChannelHandler handler, TcpNetworkChannel channel)
+
+        private Queue<string> ErrorMessages;
+
+        public ReceiveThread(INetworkChannelHandler handler, Socket socket, Queue<string> errorMsg)
         {
             mHandler = handler;
-            mChannel = channel;
+            mSocket = socket;
+            ErrorMessages = errorMsg;
             mStream = new SerializerStream(DefaultBufferLength);
             mProcessPacketHeader = true;
-            mReceiveSize = TcpNetworkChannel.PacketHeadLength;
+            mStream.SafeSetLength(TcpNetworkChannel.PacketHeadLength);
         }
 
-        protected override void MainLoop()
+        protected override bool MainLoop()
         {
 
             try
             {
                 byte[] buffer = new byte[1024];
-                int bytesReceived = mChannel.Socket.Receive(buffer, (int)mStream.Position, (int)(mReceiveSize - mStream.Position), SocketFlags.None);
+                int bytesReceived = mSocket.Receive(mStream.GetBuffer(), (int)mStream.Position, (int)(mStream.Length - mStream.Position), SocketFlags.None);
                 if (bytesReceived <= 0)
                 {
                     //if (mChannel.Status != NetworkStatus.Disconnecting)
                     //    mChannel.Disconnect();
-                    return;
+                    return false;
                 }
 
                 mStream.SetPosition(mStream.Position + bytesReceived);
-                if (mStream.Position < mReceiveSize)
+                if (mStream.Position < mStream.Length)
                 {
-                    return;
+                    return true;
                 }
 
                 mStream.SetPosition(0);
-
-
                 if (mProcessPacketHeader)
                 {
-                    mReceiveSize = TcpNetworkChannel.ReadPacketHead(mStream);
-                    mStream.SafeSetLength(mReceiveSize);
-                    mProcessPacketHeader = false;
+                    int receiveSize = TcpNetworkChannel.ReadPacketHead(mStream);
                     mStream.SetPosition(0);
+                    if (receiveSize > 0)
+                    {
+                        mStream.SafeSetLength(receiveSize);
+                        mProcessPacketHeader = false;
+                    }
+                    else
+                    {
+                        OnNetworkError("recieve packet head error,length = " + receiveSize);
+                    }
                 }
                 else
                 {
@@ -316,7 +357,8 @@ namespace Framework
                     {
                         ReceivePackets.Enqueue(packet);
                     }
-                    mReceiveSize = TcpNetworkChannel.PacketHeadLength;
+                    mStream.SetPosition(0);
+                    mStream.SafeSetLength(TcpNetworkChannel.PacketHeadLength);
                     mProcessPacketHeader = true;
                 }
             }
@@ -326,11 +368,19 @@ namespace Framework
                 if (socketException != null)
                 {
 
-                    mHandler.OnNetworkError(string.Format("socket error code = {0} see detail from https://docs.microsoft.com/en-us/windows/win32/winsock/windows-sockets-error-codes-2"
+                    OnNetworkError(string.Format("socket error code = {0} see detail from https://docs.microsoft.com/en-us/windows/win32/winsock/windows-sockets-error-codes-2"
                         , socketException.ErrorCode));
-                    return;
+                    return false;
                 }
                 throw;
+            }
+            return true;
+        }
+        void OnNetworkError(string msg)
+        {
+            lock(ErrorMessages)
+            {
+                ErrorMessages.Enqueue(msg);
             }
         }
 

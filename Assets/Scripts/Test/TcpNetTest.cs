@@ -1,4 +1,5 @@
 ﻿using Framework;
+using ProtoBuf;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,6 +8,11 @@ using UnityEngine;
 
 public class TcpNetTest : MonoBehaviour,INetworkChannelHandler
 {
+    public struct Msg
+    {
+        public string text;
+        public int id;
+    }
     public string ip = "";
     public int port = 8080;
 
@@ -66,7 +72,8 @@ public class TcpNetTest : MonoBehaviour,INetworkChannelHandler
     {
         if (channel.Status == NetworkStatus.Connected)
         {
-            channel.Send(sendMsg);
+            Msg msg = new Msg() { text = sendMsg, id = 100 };
+            channel.Send(msg);
         }
     }
 
