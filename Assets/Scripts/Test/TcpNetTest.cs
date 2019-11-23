@@ -8,13 +8,8 @@ using UnityEngine;
 
 public class TcpNetTest : MonoBehaviour,INetworkChannelHandler
 {
-    public struct Msg
-    {
-        public string text;
-        public int id;
-    }
     public string ip = "";
-    public int port = 8080;
+    public int port = 8989;
 
     public string sendMsg = "";
 
@@ -72,8 +67,7 @@ public class TcpNetTest : MonoBehaviour,INetworkChannelHandler
     {
         if (channel.Status == NetworkStatus.Connected)
         {
-            Msg msg = new Msg() { text = sendMsg, id = 100 };
-            channel.Send(msg);
+            channel.Send(sendMsg);
         }
     }
 

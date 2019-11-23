@@ -10,7 +10,6 @@ namespace Framework
         /// 连接结果处理
         /// </summary>
         /// <param name="success">是否成功</param>
-        /// <param name="errorCode">错误码</param>
         void OnConnectResult(bool success, int errorCode);
 
         /// <summary>

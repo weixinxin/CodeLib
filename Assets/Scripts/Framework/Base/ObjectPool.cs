@@ -16,41 +16,53 @@ namespace Framework
         }
         public T Acquire()
         {
-            if (mObjects.Count > 0)
+            lock(mObjects)
             {
-                return mObjects.Dequeue();
+                if (mObjects.Count > 0)
+                {
+                    return mObjects.Dequeue();
+                }
+                return new T();
             }
-            return new T();
         }
 
         public void Release(T obj)
         {
             obj.Clear();
-            if (mObjects.Contains(obj))
+            lock (mObjects)
             {
-                throw new Exception("The object has been released.");
+                if (mObjects.Contains(obj))
+                {
+                    throw new Exception("The object has been released.");
+                }
+                mObjects.Enqueue(obj);
             }
-            mObjects.Enqueue(obj);
         }
         
         public void Release(int remaining)
         {
-            if(remaining == 0)
+            if (remaining == 0)
             {
                 ReleaseAllUnused();
             }
             else
             {
-                while (mObjects.Count > remaining)
+                lock (mObjects)
                 {
-                    mObjects.Dequeue();
+                    while (mObjects.Count > remaining)
+                    {
+                        mObjects.Dequeue();
+                    }
                 }
             }
         }
 
         public void ReleaseAllUnused()
         {
-            mObjects.Clear();
+            lock (mObjects)
+            {
+                mObjects.Clear();
+            }
         }
     }
 }
