@@ -24,7 +24,7 @@ public class TcpNetTest : MonoBehaviour,INetworkChannelHandler
     
     private void Awake()
     {
-        Framework.Debug.SetLogger(new FrameworkTest.Logger());
+        Framework.Debug.SetLogger(new Logger());
 
         NetworkManager.Initialize();
 

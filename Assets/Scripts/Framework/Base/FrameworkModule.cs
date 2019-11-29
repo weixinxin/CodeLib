@@ -15,11 +15,11 @@ namespace Framework
 
         internal abstract void OnInit(params object[] args);
 
-        internal abstract void LateUpdate(float deltaTime, float unscaledDeltaTime);
+        internal virtual void LateUpdate(float deltaTime, float unscaledDeltaTime) { }
 
         internal abstract void OnDestroy();
 
-        internal abstract void Update(float deltaTime, float unscaledDeltaTime);
+        internal virtual void Update(float deltaTime, float unscaledDeltaTime) { }
     }
 
     public abstract class FrameworkModule<T> : FrameworkModuleBase where T : FrameworkModuleBase

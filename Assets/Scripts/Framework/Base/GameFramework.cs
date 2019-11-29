@@ -6,6 +6,7 @@ namespace Framework
     public static class GameFramework
     {
         private static readonly LinkedList<FrameworkModuleBase> sFrameworkModules = new LinkedList<FrameworkModuleBase>();
+        
 
         public static void Update(float deltaTime, float unscaledDeltaTime)
         {
@@ -55,6 +56,16 @@ namespace Framework
             {
                 sFrameworkModules.AddLast(module);
             }
+        }
+
+        public static T GetModule<T>() where T: FrameworkModuleBase
+        {
+            T res = null;
+            for (LinkedListNode<FrameworkModuleBase> current = sFrameworkModules.Last; current != null && res == null; current = current.Previous)
+            {
+                res = current as T;
+            }
+            return res;
         }
     }
 }

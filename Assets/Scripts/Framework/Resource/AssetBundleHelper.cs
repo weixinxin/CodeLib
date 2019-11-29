@@ -228,7 +228,7 @@ namespace Framework
         /// <param name="bundleName"></param>
         /// <param name="callback"></param>
         /// <returns>任务接口</returns>
-        public IAssetBundleLoadTask LoadAssetBundleAsync(string bundleName, LoadAssetCallback callback)
+        public IAsyncTask LoadAssetBundleAsync(string bundleName, LoadAssetCallback callback)
         {
             //Debug.Log("##User Call LoadAssetBundleAsync " + bundleName);
             AssetBundleLoadTask task = new AssetBundleLoadTask(callback);

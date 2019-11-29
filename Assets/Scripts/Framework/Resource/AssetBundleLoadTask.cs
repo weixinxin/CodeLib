@@ -5,23 +5,9 @@ using UnityEngine;
 namespace Framework
 {
     public delegate void LoadAssetCallback(AssetBundle ab);
-    public enum TaskStatus
-    {
-        Running,
-        Completed,
-        Canceled,
-    }
-    public interface IAssetBundleLoadTask
-    {
-        TaskStatus Status
-        {
-            get;
-        }
-        bool Cancel();
-    }
     public partial class AssetBundleHelper
     {
-        class AssetBundleLoadTask : IAssetBundleLoadTask
+        class AssetBundleLoadTask : IAsyncTask
         {
             private TaskStatus mStatus = TaskStatus.Running;
             public TaskStatus Status

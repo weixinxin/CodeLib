@@ -57,11 +57,7 @@ namespace Framework
             }
             mCachedEvent.Clear();
         }
-
-        internal override void LateUpdate(float deltaTime, float unscaledDeltaTime)
-        {
-
-        }
+        
 
         Dictionary<uint, Delegate> mEvents;
         Queue<Event> mEventQueue;

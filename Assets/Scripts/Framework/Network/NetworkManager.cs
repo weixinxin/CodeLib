@@ -27,11 +27,7 @@ namespace Framework
                 mChannels[i].Update(unscaledDeltaTime);
             }
         }
-
-        internal override void LateUpdate(float deltaTime, float unscaledDeltaTime)
-        {
-
-        }
+        
 
         public void AddNetworkChannel(INetworkChannel channel)
         {
@@ -44,5 +40,6 @@ namespace Framework
             }
             mChannels.Add(channel);
         }
+        
     }
 }
