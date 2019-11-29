@@ -3,12 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 namespace Framework
 {
-    public enum ResourceMode
-    {
-        Editor,
-        AssetBundle,
-        Resource,
-    }
     public class ResourceManager : FrameworkModule<ResourceManager>
     {
         private ResourceManager() { }
@@ -20,38 +14,12 @@ namespace Framework
                 return 0;
             }
         }
-
-        public ResourceMode mode
-        {
-            get;
-            protected set;
-        }
-
+        
         private IAssetLoader loader;
 
         internal override void OnInit(params object[] args)
         {
-            if (args.Length > 0)
-            {
-                mode = (ResourceMode)args[0];
-            }
-            else
-            {
-                mode = ResourceMode.Editor;
-            }
-            switch(mode)
-            {
-                case ResourceMode.Editor:
-                    loader = new EditorLoader();
-                    break;
-                case ResourceMode.AssetBundle:
-                    loader = new AssetBundleLoader();
-                    break;
-                case ResourceMode.Resource:
-                    loader = new ResourceLoader();
-                    break;
-            }
-            loader.Init();
+
         }
 
         internal override void OnDestroy()
@@ -59,9 +27,9 @@ namespace Framework
             Debug.Log("ResourceManager OnDestroy");
         }
         
-        public void SetDataPath(string dataPath)
+        public void SetAssetLoader(IAssetLoader assetLoader)
         {
-            loader.SetDataPath(dataPath);
+            loader = assetLoader;
         }
 
         public T LoadAsset<T>(string dir, string assetName) where T : UnityEngine.Object
