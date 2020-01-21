@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 namespace Framework
@@ -14,7 +15,7 @@ namespace Framework
                 return 0;
             }
         }
-        
+
         private IAssetLoader loader;
 
         internal override void OnInit(params object[] args)
@@ -26,7 +27,7 @@ namespace Framework
         {
             Debug.Log("ResourceManager OnDestroy");
         }
-        
+
         public void SetAssetLoader(IAssetLoader assetLoader)
         {
             loader = assetLoader;
@@ -41,5 +42,16 @@ namespace Framework
         {
             return loader.LoadAssetAsync(dir, assetName, callback);
         }
+
+        public void LoadScene(string scenePath, bool isAdditive = false)
+        {
+            loader.LoadScene(scenePath, isAdditive);
+        }
+
+        public IEnumerator LoadSceneAsync(string scenePath, bool isAdditive = false)
+        {
+            yield return loader.LoadSceneAsync(scenePath, isAdditive);
+        }
+
     }
 }

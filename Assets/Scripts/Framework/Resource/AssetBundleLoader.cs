@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Framework
 {
@@ -13,7 +16,7 @@ namespace Framework
             string mAssetName;
             string mBundleName;
             AssetBundleHelper mAssetBundleHelper;
-            public LoadAssetTask(string assetName, string bundleName, AssetBundleHelper helper,Action<bool, T> action)
+            public LoadAssetTask(string assetName, string bundleName, AssetBundleHelper helper, Action<bool, T> action)
             {
                 mAssetName = assetName;
                 mBundleName = bundleName;
@@ -27,7 +30,7 @@ namespace Framework
             {
                 if (Status == TaskStatus.Running)
                 {
-                    if(bundleTask.Cancel())
+                    if (bundleTask.Cancel())
                     {
                         mAssetBundleHelper.Unload(mBundleName);
                     }
@@ -66,22 +69,24 @@ namespace Framework
             }
         }
         AssetBundleHelper mAssetBundleHelper;
-        public void Init()
+
+        public AssetBundleLoader()
         {
-            mAssetBundleHelper = new AssetBundleHelper(10,20);
+            mAssetBundleHelper = new AssetBundleHelper(10, 20);
         }
+
 
         public T LoadAsset<T>(string dir, string assetName) where T : UnityEngine.Object
         {
-            string assetBundleName = FormatAssetBundleName(dir);
+            string assetBundleName = UnityUtility.ConvertAssetPathToBundleName(dir);
             AssetBundle assetBundle = mAssetBundleHelper.LoadAssetBundle(assetBundleName);
             return assetBundle.LoadAsset<T>(assetName);
         }
 
         public IAsyncTask LoadAssetAsync<T>(string dir, string assetName, Action<bool, T> callback) where T : UnityEngine.Object
         {
-            string assetBundleName = FormatAssetBundleName(dir);
-            LoadAssetTask<T> assetTask = new LoadAssetTask<T>(assetName, assetBundleName, mAssetBundleHelper,callback);
+            string assetBundleName = UnityUtility.ConvertAssetPathToBundleName(dir);
+            LoadAssetTask<T> assetTask = new LoadAssetTask<T>(assetName, assetBundleName, mAssetBundleHelper, callback);
             IAsyncTask bundleTask = mAssetBundleHelper.LoadAssetBundleAsync(assetBundleName, assetTask.OnAssetBundleLoadCompleted);
             assetTask.bundleTask = bundleTask;
             return assetTask;
@@ -94,12 +99,62 @@ namespace Framework
             string platform = "Windows";
             mAssetBundleHelper.LoadMainfest(platform);
         }
-
-        string FormatAssetBundleName(string dir)
+        
+        /// <summary>
+        /// 加载场景
+        /// </summary>
+        /// <param name="scenePath"></param>
+        /// <param name="isAdditive"></param>
+        public void LoadScene(string scenePath, bool isAdditive)
         {
-            string assetBundleName = dir.Replace('/', '-');
-            assetBundleName = assetBundleName.Replace('\\', '-');
-            return assetBundleName;
+            LoadSceneMode mode = isAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single;
+            string assetBundleName = UnityUtility.ConvertAssetPathToBundleName(scenePath);
+
+            string[] split = scenePath.Replace('\\','/').Split('/');
+            string sceneName = split[split.Length - 1].Replace(".unity", "");
+            if (!UnityUtility.IsSceneInBuildSetting(sceneName))
+            {
+                AssetBundle assetBundle = mAssetBundleHelper.LoadAssetBundle(assetBundleName);
+                UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName, mode);
+                mAssetBundleHelper.Unload(assetBundleName);
+            }
+            else
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName, mode);
+            }
         }
+
+        /// <summary>
+        /// 异步加载场景
+        /// </summary>
+        /// <param name="scenePath"></param>
+        /// <param name="isAdditive"></param>
+        /// <returns></returns>
+        public IEnumerator LoadSceneAsync(string scenePath, bool isAdditive)
+        {
+            LoadSceneMode mode = isAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single;
+            string assetBundleName = UnityUtility.ConvertAssetPathToBundleName(scenePath);
+            string[] split = assetBundleName.Split('-');
+            string sceneName = split[split.Length - 1].Replace(".unity", "");
+            bool needLoadAssetBundle = !UnityUtility.IsSceneInBuildSetting(sceneName);
+            if (needLoadAssetBundle)
+            {
+                IAsyncTask bundleTask = mAssetBundleHelper.LoadAssetBundleAsync(assetBundleName, null);
+                while (bundleTask.Status != TaskStatus.Completed)
+                {
+                    yield return null;
+                }
+            }
+            AsyncOperation operation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, mode);
+            while (!operation.isDone)
+            {
+                yield return null;
+            }
+            if (needLoadAssetBundle)
+            {
+                mAssetBundleHelper.Unload(assetBundleName);
+            }
+        }
+
     }
 }

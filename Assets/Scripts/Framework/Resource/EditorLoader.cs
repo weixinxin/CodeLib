@@ -1,5 +1,9 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
+using System.Collections;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Framework
 {
@@ -14,7 +18,7 @@ namespace Framework
                     return TaskStatus.Completed;
                 }
             }
-            
+
             public bool Cancel()
             {
                 return false;
@@ -22,9 +26,9 @@ namespace Framework
         }
 
         string mDataPath;
-        public void Init()
+        public EditorLoader()
         {
-            
+
         }
 
         public T LoadAsset<T>(string dir, string assetName) where T : UnityEngine.Object
@@ -41,10 +45,10 @@ namespace Framework
             return new EditorTask();
         }
 
-        string GetAseetPath(string dir,string assetName)
+        string GetAseetPath(string dir, string assetName)
         {
             dir = dir.Replace('\\', '/');
-            return string.Format("{0}{1}/{2}", mDataPath,dir, assetName);
+            return string.Format("{0}{1}/{2}", mDataPath, dir, assetName);
         }
         public void SetDataPath(string dataPath)
         {
@@ -54,5 +58,22 @@ namespace Framework
                 mDataPath += "/";
             }
         }
+
+        public void LoadScene(string scenePath, bool isAdditive)
+        {
+            LoadSceneParameters param = new LoadSceneParameters(isAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single);
+            EditorSceneManager.LoadSceneInPlayMode(scenePath, param);
+        }
+
+        public IEnumerator LoadSceneAsync(string scenePath, bool isAdditive)
+        {
+            LoadSceneParameters param = new LoadSceneParameters(isAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single);
+            AsyncOperation operation = EditorSceneManager.LoadSceneAsyncInPlayMode(scenePath, param);
+            while (!operation.isDone)
+            {
+                yield return null;
+            }
+        }
     }
 }
+#endif

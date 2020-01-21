@@ -6,7 +6,7 @@ namespace Framework
 {
     public partial class AssetBundleHelper
     {
-        class AssetBundleObject:IRecyclable
+        class AssetBundleObject : IRecyclable
         {
             /// <summary>
             /// 资源包名
@@ -136,7 +136,7 @@ namespace Framework
         /// </summary>
         /// <param name="LoadingLimit">同时加载的最大任务限制数</param>
         /// <param name="delayReleaseFrameCount">资源释放延迟帧数</param>
-        public AssetBundleHelper(uint LoadingLimit,uint delayReleaseFrameCount)
+        public AssetBundleHelper(uint LoadingLimit, uint delayReleaseFrameCount)
         {
             mMaxLoadingCount = (int)LoadingLimit;
             mDelayReleaseFrameCount = (int)delayReleaseFrameCount;
@@ -174,26 +174,34 @@ namespace Framework
             }
             string path = mDataPath + platform;
             mDependenciesDataList.Clear();
-            AssetBundle ab = AssetBundle.LoadFromFile(path);
-
-            if (ab == null)
+            try
             {
-                throw new Exception("LoadMainfest AssetBundle.LoadFromFile return null !");
-            }
 
-            AssetBundleManifest mainfest = ab.LoadAsset("AssetBundleManifest") as AssetBundleManifest;
-            if (mainfest == null)
-            {
-                throw new Exception("LoadMainfest AssetBundleManifest is null !");
-            }
-            foreach (string bundleName in mainfest.GetAllAssetBundles())
-            {
-                string[] dps = mainfest.GetDirectDependencies(bundleName);
-                mDependenciesDataList.Add(bundleName, dps);
-            }
+                AssetBundle ab = AssetBundle.LoadFromFile(path);
 
-            ab.Unload(true);
-            ab = null;
+                if (ab == null)
+                {
+                    throw new Exception("LoadMainfest AssetBundle.LoadFromFile return null !");
+                }
+
+                AssetBundleManifest mainfest = ab.LoadAsset("AssetBundleManifest") as AssetBundleManifest;
+                if (mainfest == null)
+                {
+                    throw new Exception("LoadMainfest AssetBundleManifest is null !");
+                }
+                foreach (string bundleName in mainfest.GetAllAssetBundles())
+                {
+                    string[] dps = mainfest.GetDirectDependencies(bundleName);
+                    mDependenciesDataList.Add(bundleName, dps);
+                }
+
+                ab.Unload(true);
+                ab = null;
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
 
             //Debug.Log("AssetBundleLoadMgr dependsCount=" + mDependenciesDataList.Count);
         }
@@ -243,7 +251,7 @@ namespace Framework
         public void Unload(string bundleName)
         {
             //Debug.Log("##User Call Unload " + bundleName);
-            UnloadAssetBundleAsync(bundleName, true,null);
+            UnloadAssetBundleAsync(bundleName, true, null);
         }
 
         /// <summary>
@@ -542,7 +550,7 @@ namespace Framework
         /// </summary>
         /// <param name="bundleName"></param>
         /// <param name="recursive"></param>
-        private void UnloadAssetBundleAsync(string bundleName,bool userCall, AssetBundleObject rootObj)
+        private void UnloadAssetBundleAsync(string bundleName, bool userCall, AssetBundleObject rootObj)
         {
             AssetBundleObject abObj = null;
             bool isWaiting = false;
@@ -554,7 +562,7 @@ namespace Framework
             {
                 throw new Exception(string.Format("UnLoadAssetbundle can not find {0}", bundleName));
             }
-            if(userCall)
+            if (userCall)
             {
                 if (abObj.userRefCount < 1)
                 {
@@ -595,7 +603,7 @@ namespace Framework
                     //通知依赖项引用减少，并传递自己来取消依赖加载完成消息
                     foreach (var dpBundleName in GetDirectDependencies(bundleName))
                     {
-                        UnloadAssetBundleAsync(dpBundleName,false, abObj);
+                        UnloadAssetBundleAsync(dpBundleName, false, abObj);
                     }
                     objectPool.Release(abObj);
                 }

@@ -36,7 +36,7 @@ public class SegmentPointDistanceTest : MonoBehaviour
         sw.Start();
         for (int i = 0; i < 100000; ++i)
         {
-            b0 = MathLib.isSegmentThroughCircle(vp, this.radius, va, vb);
+            b0 = MathLib.IsSegmentThroughCircle(vp, this.radius, va, vb);
         }
         sw.Stop();
         UnityEngine.Debug.Log("method =" + sw.ElapsedMilliseconds.ToString());

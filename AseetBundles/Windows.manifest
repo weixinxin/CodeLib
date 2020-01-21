@@ -1,0 +1,13 @@
+ManifestFileVersion: 0
+CRC: 3636860933
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: scripts-test-scene-curtain
+      Dependencies: {}
+    Info_1:
+      Name: scenes-switchscenea.unity
+      Dependencies: {}
+    Info_2:
+      Name: scenes-switchsceneb.unity
+      Dependencies: {}

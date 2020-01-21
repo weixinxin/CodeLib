@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Framework
 {
     public class ResourceLoader : IAssetLoader
     {
-        private class LoadTask<T>:IAsyncTask where T : UnityEngine.Object
+        private class LoadTask<T> : IAsyncTask where T : UnityEngine.Object
         {
             ResourceRequest mRequest;
             Action<bool, T> mCallback;
@@ -31,7 +33,7 @@ namespace Framework
 
             private void OnCompleted(AsyncOperation asyncOperation)
             {
-                if(Status != TaskStatus.Canceled)
+                if (Status != TaskStatus.Canceled)
                 {
                     Status = TaskStatus.Completed;
                     if (mCallback != null)
@@ -42,7 +44,7 @@ namespace Framework
                 }
             }
         }
-        public void Init()
+        public ResourceLoader()
         {
             Debug.Log("Load asset from 【Resource】 folder");
         }
@@ -63,7 +65,35 @@ namespace Framework
 
         public void SetDataPath(string dataPath)
         {
-            
+
+        }
+
+        public void LoadScene(string scenePath, bool isAdditive)
+        {
+            //非AB模式则必须在Build Setting中
+            LoadSceneMode mode = isAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single;
+            string sceneName = GetSceneName(scenePath);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName, mode);
+
+        }
+
+        public IEnumerator LoadSceneAsync(string scenePath, bool isAdditive)
+        {
+            //非AB模式则必须在Build Setting中
+            LoadSceneMode mode = isAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single;
+            string sceneName = GetSceneName(scenePath);
+            AsyncOperation operation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, mode);
+            while (!operation.isDone)
+            {
+                yield return null;
+            }
+        }
+
+        string GetSceneName(string scenePath)
+        {
+            scenePath = scenePath.Replace('/', '-').Replace('\\', '-').Replace(".unity","");
+            string[] split = scenePath.Split('-');
+            return split[split.Length - 1];
         }
     }
 }
