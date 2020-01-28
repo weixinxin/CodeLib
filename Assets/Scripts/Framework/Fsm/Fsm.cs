@@ -15,7 +15,6 @@ namespace Framework
             private readonly Dictionary<Type, FsmState<T>> m_States;
             private readonly Dictionary<string, object> m_Datas;
             private FsmState<T> m_CurrentState;
-            private IFsmAnyState<T> m_AnyState;
             private float m_CurrentStateTime;
             private bool m_IsDestroyed;
 
@@ -127,7 +126,7 @@ namespace Framework
             /// <param name="owner">有限状态机持有者。</param>
             /// <param name="states">有限状态机状态集合。</param>
             /// <returns>创建的有限状态机。</returns>
-            public static Fsm<T> Create(string name, T owner,IFsmAnyState<T> anyState, params FsmState<T>[] states)
+            public static Fsm<T> Create(string name, T owner, params FsmState<T>[] states)
             {
                 if (owner == null)
                 {
@@ -142,7 +141,6 @@ namespace Framework
                 Fsm<T> fsm = new Fsm<T>();
                 fsm.Name = name;
                 fsm.m_Owner = owner;
-                fsm.m_AnyState = anyState;
                 foreach (FsmState<T> state in states)
                 {
                     if (state == null)
@@ -336,12 +334,7 @@ namespace Framework
                 {
                     throw new Exception("Current state is invalid.");
                 }
-
-                if(!m_CurrentState.OnEvent(this, sender, eventId, null))
-                {
-                    if (m_AnyState != null)
-                        m_AnyState.OnEvent(this, sender, eventId, null);
-                }
+                m_CurrentState.OnEvent(this, sender, eventId, null);
             }
 
             /// <summary>
@@ -356,12 +349,7 @@ namespace Framework
                 {
                     throw new Exception("Current state is invalid.");
                 }
-
-                if (!m_CurrentState.OnEvent(this, sender, eventId, userData))
-                {
-                    if (m_AnyState != null)
-                        m_AnyState.OnEvent(this, sender, eventId, userData);
-                }
+                m_CurrentState.OnEvent(this, sender, eventId, userData);
             }
 
             /// <summary>

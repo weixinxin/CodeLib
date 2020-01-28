@@ -35,6 +35,11 @@ public class Coroutine
                 {
                     stack.Push(new ExAsyncOperation(cur.Current as UnityEngine.AsyncOperation));
                 }
+                else if(cur.Current != null)
+                {
+                    //不支持的类型
+                    throw new NotSupportedException(string.Format("No support type {0}", cur.Current.GetType()));
+                }
             }
         }
         return stack.Count > 0;

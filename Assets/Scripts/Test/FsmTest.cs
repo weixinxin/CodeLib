@@ -9,11 +9,11 @@ using Sirenix.Serialization;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 
-public class FsmTest : MonoBehaviour,IFsmAnyState<FsmTest>
+public class FsmTest : MonoBehaviour
 {
     IFsm<FsmTest> mFsm;
     public string state = "";
-    [Button(Name ="Work")]
+    [Button(Name = "Work")]
     void Work()
     {
         Framework.Debug.Log("Start Work");
@@ -36,25 +36,13 @@ public class FsmTest : MonoBehaviour,IFsmAnyState<FsmTest>
     {
         Framework.Debug.SetLogger(new Logger());
         FsmManager.Initialize();
-        mFsm = FsmManager.Instance.CreateFsm<FsmTest>("FsmTest", this, this,new NormalState(),new TiredState(),new DeadState());
+        mFsm = FsmManager.Instance.CreateFsm<FsmTest>("FsmTest", this, new NormalState(), new TiredState(), new DeadState());
         mFsm.Start<NormalState>();
     }
 
     void Update()
     {
         GameFramework.Update(Time.deltaTime, Time.unscaledDeltaTime);
-    }
-
-    public void OnEvent(IFsm<FsmTest> fsm, object sender, int eventId, object userData)
-    {
-        if (eventId == Event.die)
-        {
-            fsm.ChangeState<DeadState>();
-        }
-        else
-        {
-            Framework.Debug.Log("No Response!");
-        }
     }
     
 
@@ -64,7 +52,28 @@ public class FsmTest : MonoBehaviour,IFsmAnyState<FsmTest>
         public const int rest = 2;
         public const int die = 3;
     }
-    class NormalState:FsmState<FsmTest>
+
+    class BaseState :FsmState<FsmTest>
+    {
+        internal override bool OnEvent(IFsm<FsmTest> fsm, object sender, int eventId, object userData)
+        {
+            if(!base.OnEvent(fsm, sender, eventId, userData))
+            {
+
+                if (eventId == Event.die)
+                {
+                    fsm.ChangeState<DeadState>();
+                }
+                else
+                {
+                    Framework.Debug.Log("No Response!");
+                }
+            }
+            return true;
+        }
+    }
+
+    class NormalState: BaseState
     {
         protected internal override void OnInit(IFsm<FsmTest> fsm)
         {
@@ -90,7 +99,7 @@ public class FsmTest : MonoBehaviour,IFsmAnyState<FsmTest>
         }
     }
 
-    class TiredState : FsmState<FsmTest>
+    class TiredState : BaseState
     {
         protected internal override void OnInit(IFsm<FsmTest> fsm)
         {
@@ -114,7 +123,7 @@ public class FsmTest : MonoBehaviour,IFsmAnyState<FsmTest>
             return true;
         }
     }
-    class DeadState : FsmState<FsmTest>
+    class DeadState : BaseState
     {
         protected internal override void OnInit(IFsm<FsmTest> fsm)
         {

@@ -141,7 +141,7 @@ namespace Framework
         /// <param name="sender">事件源。</param>
         /// <param name="eventId">事件编号。</param>
         /// <param name="userData">用户自定义数据。</param>
-        internal bool OnEvent(IFsm<T> fsm, object sender, int eventId, object userData)
+        internal virtual bool OnEvent(IFsm<T> fsm, object sender, int eventId, object userData)
         {
             FsmEventHandler<T> eventHandlers = null;
             if (m_EventHandlers.TryGetValue(eventId, out eventHandlers))

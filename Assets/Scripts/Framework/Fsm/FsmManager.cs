@@ -53,9 +53,9 @@ namespace Framework
         }
 
         
-        public IFsm<T> CreateFsm<T>(string name, T owner,IFsmAnyState<T> anyState, params FsmState<T>[] states) where T : class
+        public IFsm<T> CreateFsm<T>(string name, T owner, params FsmState<T>[] states) where T : class
         {
-            Fsm<T> fsm = Fsm<T>.Create(name, owner, anyState, states);
+            Fsm<T> fsm = Fsm<T>.Create(name, owner, states);
             mTempFsms.Add(fsm);
             return fsm;
         }
