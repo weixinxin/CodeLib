@@ -23,6 +23,11 @@ namespace Framework
 
         }
 
+        internal override void Update(float deltaTime, float unscaledDeltaTime)
+        {
+            loader.Update(deltaTime);
+        }
+
         internal override void OnDestroy()
         {
             Debug.Log("ResourceManager OnDestroy");

@@ -89,6 +89,10 @@ namespace Framework
             }
         }
 
+        public void Update(float deltaTime)
+        {
+
+        }
         string GetSceneName(string scenePath)
         {
             scenePath = scenePath.Replace('/', '-').Replace('\\', '-').Replace(".unity","");

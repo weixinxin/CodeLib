@@ -9,15 +9,30 @@ public class DefaultSceneCurtain : MonoBehaviour, ISceneCurtain
 {
     [SerializeField]
     Image curtain;
+
     public IEnumerator Falls()
     {
-        curtain.CrossFadeAlpha(1, 1, true);
-        yield return new WaitForSeconds(1f);
+        float scale = 0;
+        Color color = curtain.color;
+        while (scale < 1)
+        {
+            scale += Time.deltaTime;
+            color.a = scale;
+            curtain.color = color;
+            yield return null;
+        }
     }
 
     public IEnumerator Raise()
     {
-        curtain.CrossFadeAlpha(0, 1, true);
-        yield return new WaitForSeconds(1f);
+        float scale = 1;
+        Color color = curtain.color;
+        while (scale > 0)
+        {
+            scale -= Time.deltaTime;
+            color.a = scale;
+            curtain.color = color;
+            yield return null;
+        }
     }
 }

@@ -27,7 +27,7 @@ namespace Framework
 
         private List<BaseScene> mScenes = new List<BaseScene>();
 
-        private Stack<IEnumerator> mRunningCoroutine;
+        private Coroutine mRunningCoroutine;
 
         /// <summary>
         /// 场景帷幕
@@ -36,7 +36,7 @@ namespace Framework
 
         internal override void OnInit(params object[] args)
         {
-            mRunningCoroutine = new Stack<IEnumerator>();
+            mRunningCoroutine = null;
         }
 
         internal override void OnDestroy()
@@ -46,21 +46,9 @@ namespace Framework
 
         internal override void Update(float deltaTime, float unscaledDeltaTime)
         {
-            if (mRunningCoroutine != null && mRunningCoroutine.Count > 0)
+            if (mRunningCoroutine != null && !mRunningCoroutine.Update())
             {
-                var itor = mRunningCoroutine.Peek();
-                if (itor.MoveNext())
-                {
-                    if(itor.Current is IEnumerator)
-                    {
-                        mRunningCoroutine.Push(itor.Current as IEnumerator);
-                    }
-                }
-                else
-                {
-                    mRunningCoroutine.Pop();
-                }
-
+                mRunningCoroutine = null;
             }
             if (CurrentScene != null && CurrentScene.isActive)
                 CurrentScene.Update(deltaTime);
@@ -127,9 +115,7 @@ namespace Framework
             {
                 nextScene = (BaseScene)Activator.CreateInstance(type);
             }
-
-            mRunningCoroutine.Clear();
-            mRunningCoroutine.Push(SwitchScene(CurrentScene, nextScene, args));
+            mRunningCoroutine = new Coroutine(SwitchScene(CurrentScene, nextScene, args));
         }
 
 

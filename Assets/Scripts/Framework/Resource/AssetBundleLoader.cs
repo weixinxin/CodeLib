@@ -134,7 +134,7 @@ namespace Framework
         {
             LoadSceneMode mode = isAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single;
             string assetBundleName = UnityUtility.ConvertAssetPathToBundleName(scenePath);
-            string[] split = assetBundleName.Split('-');
+            string[] split = scenePath.Replace('\\', '/').Split('/');
             string sceneName = split[split.Length - 1].Replace(".unity", "");
             bool needLoadAssetBundle = !UnityUtility.IsSceneInBuildSetting(sceneName);
             if (needLoadAssetBundle)
@@ -156,5 +156,9 @@ namespace Framework
             }
         }
 
+        public void Update(float deltaTime)
+        {
+            mAssetBundleHelper.Update();
+        }
     }
 }

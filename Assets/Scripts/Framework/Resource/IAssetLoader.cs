@@ -15,5 +15,7 @@ namespace Framework
         void LoadScene(string scenePath, bool isAdditive);
 
         IEnumerator LoadSceneAsync(string scenePath, bool isAdditive);
+
+        void Update(float deltaTime);
     }
 }

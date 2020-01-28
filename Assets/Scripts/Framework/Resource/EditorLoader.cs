@@ -74,6 +74,11 @@ namespace Framework
                 yield return null;
             }
         }
+
+        public void Update(float deltaTime)
+        {
+
+        }
     }
 }
 #endif
