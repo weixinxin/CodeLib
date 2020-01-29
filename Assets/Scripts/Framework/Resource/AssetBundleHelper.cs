@@ -605,7 +605,7 @@ namespace Framework
                     {
                         UnloadAssetBundleAsync(dpBundleName, false, abObj);
                     }
-                    objectPool.Release(abObj);
+                    objectPool.Recycle(abObj);
                 }
                 else
                 {
@@ -710,7 +710,7 @@ namespace Framework
                         abObj.Unload();
                         mUnloadList.RemoveAt(i);
                         mLoadedList.Remove(abObj.bundleName);
-                        objectPool.Release(abObj);
+                        objectPool.Recycle(abObj);
                     }
                 }
 

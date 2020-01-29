@@ -180,7 +180,7 @@ namespace Framework
                     netMessage = mMessageQueue.Dequeue();
                 }
                 netMessage.Send(mHandler);
-                mObjectPool.Release(netMessage);
+                mObjectPool.Recycle(netMessage);
             }
         }
 

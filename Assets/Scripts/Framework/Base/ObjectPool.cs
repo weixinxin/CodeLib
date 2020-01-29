@@ -26,7 +26,7 @@ namespace Framework
             }
         }
 
-        public void Release(T obj)
+        public void Recycle(T obj)
         {
             obj.Clear();
             lock (mObjects)
