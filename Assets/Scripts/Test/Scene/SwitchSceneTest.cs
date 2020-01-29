@@ -31,13 +31,14 @@ public class SwitchSceneTest : MonoBehaviour
             inited = true;
             Framework.Debug.SetLogger(new Logger());
             ResourceManager.Initialize();
+            UIManager.Initialize();
             SetLoader();
             SceneManager.Initialize();
             GameObject prefab = ResourceManager.Instance.LoadAsset<GameObject>("Scripts/Test/Scene/Curtain", "SceneCurtain");
             GameObject obj =  GameObject.Instantiate(prefab);
             DefaultSceneCurtain sceneCurtain = obj.GetComponent<DefaultSceneCurtain>();
             DontDestroyOnLoad(obj);
-            SceneManager.Instance.SetSceneCurtain(sceneCurtain);
+            SceneManager.Instance.SetDefaultSceneCurtain(sceneCurtain);
         }
     }
 
@@ -65,5 +66,9 @@ public class SwitchSceneTest : MonoBehaviour
     private void Update()
     {
         GameFramework.Update(Time.deltaTime, Time.unscaledDeltaTime);
+    }
+    private void LateUpdate()
+    {
+        GameFramework.LateUpdate(Time.deltaTime, Time.unscaledDeltaTime);
     }
 }

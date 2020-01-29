@@ -4,32 +4,27 @@ using System.Collections.Generic;
 
 namespace Framework
 {
-
-    public abstract class BaseScene
+    public abstract partial class BaseScene
     {
         public bool isActive { get; protected set; }
 
         protected abstract string url{ get; }
 
-        public IEnumerator Enter(params object[] args)
-        {
-            isActive = true;
-            yield return ResourceManager.Instance.LoadSceneAsync(url);
-            yield return OnEnter(args);
-        }
+        /// <summary>
+        /// 场景切换完成，揭幕前的操作
+        /// </summary>
+        /// <param name="args">参数</param>
+        /// <returns></returns>
+        protected abstract IEnumerator OnEnter(params object[] args);
 
-        public IEnumerator Exit()
-        {
-            isActive = false;
-            yield return OnExit();
-        }
+        protected virtual void OnUpdate(float dt) { }
 
-        public abstract IEnumerator OnEnter(params object[] args);
+        protected virtual void OnLateUpdate(float dt) { }
 
-        public virtual void Update(float dt) { }
-
-        public virtual void LateUpdate(float dt) { }
-
-        public abstract IEnumerator OnExit();
+        /// <summary>
+        /// 落幕后开始切换场景前的操作
+        /// </summary>
+        /// <returns></returns>
+        protected abstract IEnumerator OnExit();
     }
 }

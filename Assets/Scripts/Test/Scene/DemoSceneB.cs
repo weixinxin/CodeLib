@@ -9,12 +9,13 @@ public class DemoSceneB : BaseScene
 {
     protected override string url => "Scenes/SwitchSceneB.unity";
 
-    public override IEnumerator OnEnter(params object[] args)
+    protected override IEnumerator OnEnter(params object[] args)
     {
+        UIManager.Instance.OpenUI("TestPanelBf");
         yield return null;
     }
 
-    public override IEnumerator OnExit()
+    protected override IEnumerator OnExit()
     {
         yield return null;
     }

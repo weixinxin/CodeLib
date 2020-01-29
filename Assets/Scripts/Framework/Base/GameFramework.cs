@@ -63,7 +63,7 @@ namespace Framework
             T res = null;
             for (LinkedListNode<FrameworkModuleBase> current = sFrameworkModules.Last; current != null && res == null; current = current.Previous)
             {
-                res = current as T;
+                res = current.Value as T;
             }
             return res;
         }

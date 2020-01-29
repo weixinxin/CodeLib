@@ -61,18 +61,29 @@ namespace Framework
 
         public void LoadScene(string scenePath, bool isAdditive)
         {
+            scenePath = FormatScenePath(scenePath);
             LoadSceneParameters param = new LoadSceneParameters(isAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single);
             EditorSceneManager.LoadSceneInPlayMode(scenePath, param);
         }
 
         public IEnumerator LoadSceneAsync(string scenePath, bool isAdditive)
         {
+            scenePath = FormatScenePath(scenePath);
             LoadSceneParameters param = new LoadSceneParameters(isAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single);
             AsyncOperation operation = EditorSceneManager.LoadSceneAsyncInPlayMode(scenePath, param);
             while (!operation.isDone)
             {
                 yield return null;
             }
+        }
+
+        string FormatScenePath(string scenePath)
+        {
+            if (!scenePath.StartsWith("Assets/"))
+            {
+                scenePath = "Assets/" + scenePath;
+            }
+            return scenePath;
         }
 
         public void Update(float deltaTime)

@@ -44,6 +44,7 @@ namespace Framework
                 }
             }
         }
+
         public ResourceLoader()
         {
             Debug.Log("Load asset from 【Resource】 folder");
@@ -74,7 +75,6 @@ namespace Framework
             LoadSceneMode mode = isAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single;
             string sceneName = GetSceneName(scenePath);
             UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName, mode);
-
         }
 
         public IEnumerator LoadSceneAsync(string scenePath, bool isAdditive)
@@ -89,10 +89,8 @@ namespace Framework
             }
         }
 
-        public void Update(float deltaTime)
-        {
+        public void Update(float deltaTime){}
 
-        }
         string GetSceneName(string scenePath)
         {
             scenePath = scenePath.Replace('/', '-').Replace('\\', '-').Replace(".unity","");
