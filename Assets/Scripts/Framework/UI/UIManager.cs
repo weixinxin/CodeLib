@@ -107,7 +107,8 @@ namespace Framework
             SceneManager sceneManager = GameFramework.GetModule<SceneManager>();
             if (sceneManager != null && sceneManager.IsDestroyingScene)
             {
-                throw new InvalidOperationException("Scene being destroyed, operation invalid");
+                Debug.LogException(new InvalidOperationException("Scene being destroyed, operation invalid"));
+                return;
             }
 
             //检查界面是否已存在
@@ -132,7 +133,8 @@ namespace Framework
             }
             else if (type == typeof(LuaPanel))
             {
-                throw new NotSupportedException("Not Supported LuaPanel!");
+                Debug.LogException(new NotSupportedException("Not Supported LuaPanel!"));
+                return;
             }
             BasePanel panel = (BasePanel)Activator.CreateInstance(type);
             GameObject obj = InstantiatePanel(panel);
@@ -153,7 +155,9 @@ namespace Framework
             int index = path.LastIndexOf('/');
             if (index == -1)
             {
-                throw new UriFormatException(string.Format("Invalid URI: The URI scheme is not valid - {0}", url));
+                var exception = new UriFormatException(string.Format("Invalid URI: The URI scheme is not valid - {0}", url));
+                Debug.LogException(exception);
+                throw exception;
             }
             string dir = path.Substring(0, index);
             string assetName = path.Substring(index + 1);

@@ -157,6 +157,7 @@ namespace Framework
             {
                 nextScene = (BaseScene)Activator.CreateInstance(type);
             }
+            m_IsDestroyingScene = true;
             m_RunningCoroutine = new Coroutine(SwitchScene(CurrentScene, nextScene, curtain == null ? m_DefaultCurtain : curtain, args));
         }
 
@@ -165,8 +166,10 @@ namespace Framework
         IEnumerator SwitchScene(BaseScene origScene, BaseScene nextScene, ISceneCurtain curtain, params object[] args)
         {
             if (origScene == nextScene)
+            {
+                m_IsDestroyingScene = false;
                 yield break;
-            m_IsDestroyingScene = true;
+            }
             //落幕
             if (curtain != null)
                 yield return curtain.Falls();
