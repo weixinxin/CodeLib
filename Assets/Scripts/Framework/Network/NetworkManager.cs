@@ -5,13 +5,8 @@ namespace Framework
     public class NetworkManager : FrameworkModule<NetworkManager>
     {
         private List<INetworkChannel> mChannels = new List<INetworkChannel>();
-
-        internal override void OnInit(params object[] args)
-        {
-
-        }
-
-        internal override void OnDestroy()
+        
+        protected override void OnDestroy()
         {
             for (int i = 0; i < mChannels.Count; ++i)
             {
@@ -20,7 +15,7 @@ namespace Framework
             mChannels.Clear();
         }
 
-        internal override void Update(float deltaTime, float unscaledDeltaTime)
+        protected override void Update(float deltaTime, float unscaledDeltaTime)
         {
             for(int i = 0;i< mChannels.Count;++i)
             {

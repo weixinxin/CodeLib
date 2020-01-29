@@ -1,5 +1,5 @@
 ﻿using Framework;
-using ProtoBuf;
+//using ProtoBuf;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,8 +25,7 @@ public class TcpNetTest : MonoBehaviour,INetworkChannelHandler
     private void Awake()
     {
         Framework.Debug.SetLogger(new Logger());
-
-        NetworkManager.Initialize();
+        GameFramework.Register(new NetworkManager());
 
         channel = new TcpNetworkChannel("testTCP", this);
 

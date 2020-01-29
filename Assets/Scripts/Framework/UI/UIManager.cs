@@ -36,13 +36,9 @@ namespace Framework
                 return m_Canvas.transform;
             }
         }
+        
 
-        internal override void OnInit(params object[] args)
-        {
-
-        }
-
-        internal override void Update(float deltaTime, float unscaledDeltaTime)
+        protected override void Update(float deltaTime, float unscaledDeltaTime)
         {
             foreach (BasePanel panel in m_UpdateList)
             {
@@ -50,7 +46,7 @@ namespace Framework
             }
         }
 
-        internal override void LateUpdate(float deltaTime, float unscaledDeltaTime)
+        protected override void LateUpdate(float deltaTime, float unscaledDeltaTime)
         {
             foreach (BasePanel panel in m_UpdateList)
             {
@@ -88,7 +84,7 @@ namespace Framework
             }
         }
 
-        internal override void OnDestroy()
+        protected override void OnDestroy()
         {
             m_IsDirty = false;
             m_Panels.Clear();

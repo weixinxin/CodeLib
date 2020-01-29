@@ -7,12 +7,8 @@ namespace Framework
     {
         private readonly List<FsmBase> mFsms = new List<FsmBase>();
         private readonly List<FsmBase> mTempFsms = new List<FsmBase>();
-        internal override void OnInit(params object[] args)
-        {
 
-        }
-
-        internal override void OnDestroy()
+        protected override void OnDestroy()
         {
             foreach(var fsm in mFsms)
             {
@@ -26,7 +22,7 @@ namespace Framework
             mTempFsms.Clear();
         }
 
-        internal override void Update(float deltaTime, float unscaledDeltaTime)
+        protected override void Update(float deltaTime, float unscaledDeltaTime)
         {
             if (mTempFsms.Count > 0)
             {

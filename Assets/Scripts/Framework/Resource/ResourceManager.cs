@@ -6,8 +6,6 @@ namespace Framework
 {
     public class ResourceManager : FrameworkModule<ResourceManager>
     {
-        private ResourceManager() { }
-
         public override int Priority
         {
             get
@@ -18,17 +16,12 @@ namespace Framework
 
         private IAssetLoader loader;
 
-        internal override void OnInit(params object[] args)
-        {
-
-        }
-
-        internal override void Update(float deltaTime, float unscaledDeltaTime)
+        protected override void Update(float deltaTime, float unscaledDeltaTime)
         {
             loader.Update(deltaTime);
         }
 
-        internal override void OnDestroy()
+        protected override void OnDestroy()
         {
             Debug.Log("ResourceManager OnDestroy");
         }

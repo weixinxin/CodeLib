@@ -3,7 +3,7 @@ using System;
 
 namespace Framework
 {
-    public abstract class FrameworkModuleBase
+    public abstract partial class FrameworkModuleBase
     {
         public virtual int Priority
         {
@@ -12,14 +12,11 @@ namespace Framework
                 return 0;
             }
         }
+        protected virtual void LateUpdate(float deltaTime, float unscaledDeltaTime) { }
 
-        internal abstract void OnInit(params object[] args);
+        protected abstract void OnDestroy();
 
-        internal virtual void LateUpdate(float deltaTime, float unscaledDeltaTime) { }
-
-        internal abstract void OnDestroy();
-
-        internal virtual void Update(float deltaTime, float unscaledDeltaTime) { }
+        protected virtual void Update(float deltaTime, float unscaledDeltaTime) { }
     }
 
     public abstract class FrameworkModule<T> : FrameworkModuleBase where T : FrameworkModuleBase
@@ -32,22 +29,16 @@ namespace Framework
             {
                 if(sInstance == null)
                 {
-                    //报错
-                    throw new Exception(string.Format( "you should call {0}.Initialize() first!!" , typeof(T).Name));
+                    sInstance = GameFramework.GetModule<T>();
+                    if (sInstance == null)
+                    {
+                        //报错
+                        throw new Exception(string.Format("you should call GameFramework.Register({0}) first!!", typeof(T).Name));
+                    }
                 }
                 return sInstance;
             }
         }
-
-        public static void Initialize(params object[] args)
-        {
-            if (null == sInstance)
-            {
-                sInstance = Activator.CreateInstance(typeof(T), true) as T;
-                GameFramework.RegisterModule(sInstance);
-                sInstance.OnInit(args);
-            }
-        }
-
+        
     }
 }

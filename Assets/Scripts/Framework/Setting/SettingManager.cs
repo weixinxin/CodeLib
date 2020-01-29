@@ -33,10 +33,7 @@ namespace Framework
             mSettingHelper = settingHelper;
         }
 
-        internal override void Update(float deltaTime, float unscaledDeltaTime){}
-        internal override void LateUpdate(float deltaTime, float unscaledDeltaTime){}
-
-        internal override void OnDestroy()
+        protected override void OnDestroy()
         {
             Save();
             if (m_CacheData)
@@ -47,16 +44,11 @@ namespace Framework
             }
         }
 
-        internal override void OnInit(params object[] args)
+        public SettingManager(ISettingHelper helper = null, bool cacheData = false, int capacity = 16)
         {
-            int capacity = 16;
-            if (args.Length > 1)
+            m_CacheData = cacheData;
+            if (helper != null)
             {
-                m_CacheData = (bool)args[1];
-            }
-            if (args.Length > 0)
-            {
-                ISettingHelper helper = args[0] as ISettingHelper;
                 SetSettingHelper(helper);
                 Load();
             }

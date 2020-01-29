@@ -17,10 +17,8 @@ public class FrameworkTest : MonoBehaviour
     private void Awake()
     {
         Framework.Debug.SetLogger(new Logger());
-        SettingManager.Initialize(new SettingHelper(),true);
-        EventManager.Initialize();
-        ResourceManager.Initialize();
-
+        GameFramework.Register(new SettingManager(new SettingHelper(), true));
+        GameFramework.Register(new EventManager());
         EventManager.Instance.AddListener<string>(TestEvent.left, OnEvent);
         EventManager.Instance.AddListener<string>(TestEvent.right, OnEvent2);
         EventManager.Instance.AddListener(TestEvent.other, OnEvent3);

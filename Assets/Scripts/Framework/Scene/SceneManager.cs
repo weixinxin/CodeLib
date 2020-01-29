@@ -42,24 +42,20 @@ namespace Framework
 
         private List<BaseScene> m_Scenes = new List<BaseScene>();
 
-        private Coroutine m_RunningCoroutine;
+        private Coroutine m_RunningCoroutine = null;
 
         /// <summary>
         /// 场景帷幕
         /// </summary>
         private ISceneCurtain m_DefaultCurtain;
 
-        internal override void OnInit(params object[] args)
+
+        protected override void OnDestroy()
         {
             m_RunningCoroutine = null;
         }
 
-        internal override void OnDestroy()
-        {
-            m_RunningCoroutine = null;
-        }
-
-        internal override void Update(float deltaTime, float unscaledDeltaTime)
+        protected override void Update(float deltaTime, float unscaledDeltaTime)
         {
             if (m_RunningCoroutine != null && !m_RunningCoroutine.Update())
             {
@@ -69,7 +65,7 @@ namespace Framework
                 InvokeUpdate(CurrentScene, deltaTime, unscaledDeltaTime);
         }
 
-        internal override void LateUpdate(float deltaTime, float unscaledDeltaTime)
+        protected override void LateUpdate(float deltaTime, float unscaledDeltaTime)
         {
             if (CurrentScene != null && CurrentScene.isActive)
                 InvokeLateUpdate(CurrentScene, deltaTime, unscaledDeltaTime);

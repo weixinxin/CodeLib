@@ -35,7 +35,7 @@ public class FsmTest : MonoBehaviour
     private void Awake()
     {
         Framework.Debug.SetLogger(new Logger());
-        FsmManager.Initialize();
+        GameFramework.Register(new FsmManager());
         mFsm = FsmManager.Instance.CreateFsm<FsmTest>("FsmTest", this, new NormalState(), new TiredState(), new DeadState());
         mFsm.Start<NormalState>();
     }

@@ -22,7 +22,9 @@ public class SwitchSceneTest : MonoBehaviour
     void SwitchScene()
     {
         SceneManager.Instance.SwitchScene(SceneName);
+        UIManager.Instance.OpenUI("TestPanelAf");
     }
+    
 
     private void Awake()
     {
@@ -30,10 +32,10 @@ public class SwitchSceneTest : MonoBehaviour
         {
             inited = true;
             Framework.Debug.SetLogger(new Logger());
-            ResourceManager.Initialize();
-            UIManager.Initialize();
+            GameFramework.Register(new ResourceManager());
+            GameFramework.Register(new UIManager());
+            GameFramework.Register(new SceneManager());
             SetLoader();
-            SceneManager.Initialize();
             GameObject prefab = ResourceManager.Instance.LoadAsset<GameObject>("Scripts/Test/Scene/Curtain", "SceneCurtain");
             GameObject obj =  GameObject.Instantiate(prefab);
             DefaultSceneCurtain sceneCurtain = obj.GetComponent<DefaultSceneCurtain>();

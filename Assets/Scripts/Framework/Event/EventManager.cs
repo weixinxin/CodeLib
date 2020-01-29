@@ -14,24 +14,14 @@ namespace Framework
             }
         }
 
-        internal override void OnInit(params object[] args)
+        public EventManager(int capacity_dic = 64, int capacity_que = 16)
         {
-            int capacity_dic = 64;
-            int capacity_que = 16;
-            if (args.Length > 0)
-            {
-                capacity_dic = (int)args[0];
-            }
-            if (args.Length > 1)
-            {
-                capacity_que = (int)args[1];
-            }
             mEvents = new Dictionary<uint, Delegate>(capacity_dic);
             mEventQueue = new Queue<Event>(capacity_que);
             mCachedEvent = new List<Event>(capacity_que);
         }
 
-        internal override void OnDestroy()
+        protected override void OnDestroy()
         {
             Debug.Log("EventManager OnDestroy");
             mEvents.Clear();
@@ -40,7 +30,7 @@ namespace Framework
 
         }
 
-        internal override void Update(float deltaTime, float unscaledDeltaTime)
+        protected override void Update(float deltaTime, float unscaledDeltaTime)
         {
             while (mEventQueue.Count > 0)
             {
