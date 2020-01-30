@@ -1,0 +1,7 @@
+C:\Workspace\ServerConsole\ServerConsole\bin\Debug\ServerConsole.exe.config
+C:\Workspace\ServerConsole\ServerConsole\bin\Debug\ServerConsole.exe
+C:\Workspace\ServerConsole\ServerConsole\bin\Debug\ServerConsole.pdb
+C:\Workspace\ServerConsole\ServerConsole\obj\Debug\ServerConsole.csprojAssemblyReference.cache
+C:\Workspace\ServerConsole\ServerConsole\obj\Debug\ServerConsole.csproj.CoreCompileInputs.cache
+C:\Workspace\ServerConsole\ServerConsole\obj\Debug\ServerConsole.exe
+C:\Workspace\ServerConsole\ServerConsole\obj\Debug\ServerConsole.pdb
