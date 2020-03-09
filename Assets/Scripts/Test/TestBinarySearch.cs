@@ -12,6 +12,6 @@ public class TestBinarySearch : MonoBehaviour
     [Button(Name = "Insert")]
     void Search()
     {
-        MathLib.BinaryInsert(list, target);
+        //MathLib.BinaryInsert(list, target);
     }
 }

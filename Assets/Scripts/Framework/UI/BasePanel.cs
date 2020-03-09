@@ -49,6 +49,14 @@ namespace Framework
         }
 
         /// <summary>
+        /// 初始化界面
+        /// </summary>
+        protected virtual void OnInit()
+        {
+
+        }
+
+        /// <summary>
         /// 界面打开
         /// </summary>
         /// <param name="args">界面参数</param>

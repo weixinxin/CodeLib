@@ -1,0 +1,16 @@
+ManifestFileVersion: 0
+CRC: 4006663823
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 1022eb0391f1d94a450674ebc86be09c
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 5ad585dd02dfb5016c0dad519eab8f49
+HashAppended: 0
+ClassTypes:
+- Class: 49
+  Script: {instanceID: 0}
+Assets:
+- Assets/LuaScripts/Examples/ExamplePanel.lua.txt
+Dependencies: []

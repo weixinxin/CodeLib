@@ -16,11 +16,20 @@ namespace Framework
                 InvokeUpdate(module,deltaTime, unscaledDeltaTime);
             }
         }
+
         public static void LateUpdate(float deltaTime, float unscaledDeltaTime)
         {
             foreach (FrameworkModuleBase module in sFrameworkModules)
             {
                 InvokeLateUpdate(module,deltaTime, unscaledDeltaTime);
+            }
+        }
+
+        public static void FixedUpdate(float deltaTime, float unscaledDeltaTime)
+        {
+            foreach (FrameworkModuleBase module in sFrameworkModules)
+            {
+                InvokeFixedUpdate(module, deltaTime, unscaledDeltaTime);
             }
         }
 

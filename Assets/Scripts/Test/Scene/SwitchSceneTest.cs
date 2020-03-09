@@ -24,7 +24,13 @@ public class SwitchSceneTest : MonoBehaviour
         SceneManager.Instance.SwitchScene(SceneName);
         UIManager.Instance.OpenUI("TestPanelAf");
     }
-    
+
+    [Button("Load")]
+    void Load()
+    {
+        TextAsset text = ResourceManager.Instance.LoadAsset<TextAsset>("LuaScripts", "ExamplePanel.lua");
+        UnityEngine.Debug.Log(text.text);
+    }
 
     private void Awake()
     {

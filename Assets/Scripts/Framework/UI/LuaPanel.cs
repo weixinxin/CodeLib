@@ -1,43 +1,69 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+using XLua;
+
 namespace Framework
 {
     public sealed class LuaPanel : BasePanel
     {
-        public override bool isFullScreen => throw new NotImplementedException();
+        [CSharpCallLua]
+        public delegate void LuaPanelAction();
+        [CSharpCallLua]
+        public delegate void LuaPanelAwake(Transform root, object[] args);
+        [CSharpCallLua]
+        public delegate void LuaPanelUpdate(float elapseSeconds, float realElapseSeconds);
 
-        protected override string url => throw new NotImplementedException();
+
+        private bool m_IsFullScreen;
+        public override bool isFullScreen => m_IsFullScreen;
+
+        private string m_Url;
+        protected override string url => m_Url;
+
+        private LuaPanelAction m_OnCover;
+        private LuaPanelAction m_OnReveal;
+        private LuaPanelUpdate m_OnLateUpdate;
+        private LuaPanelUpdate m_OnUpdate;
+
+        protected override void OnInit()
+        {
+            m_Url = LuaManager.Instance.Get<string>(UIName + ".url");
+            m_IsFullScreen = LuaManager.Instance.Get<bool>(UIName + ".isFullScreen");
+            m_OnCover = LuaManager.Instance.Get<LuaPanelAction>(UIName + ".OnCover");
+        }
 
         protected override void OnAwake(params object[] userData)
         {
-            throw new NotImplementedException();
+            LuaPanelAwake awake = LuaManager.Instance.Get<LuaPanelAwake>(UIName + ".OnAwake");
+            awake(gameObject.transform, userData);
         }
 
         protected override void OnClose()
         {
-            throw new NotImplementedException();
+            LuaManager.Instance.Get<LuaPanelAction>(UIName + ".OnClose")?.Invoke();
         }
 
         protected override void OnCover()
         {
-            throw new NotImplementedException();
+            m_OnCover?.Invoke();
         }
 
         protected override void OnLateUpdate(float elapseSeconds, float realElapseSeconds)
         {
-            throw new NotImplementedException();
+            m_OnLateUpdate?.Invoke(elapseSeconds, realElapseSeconds);
         }
 
         protected override void OnReveal()
         {
-            throw new NotImplementedException();
+            m_OnReveal?.Invoke();
         }
 
         protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
         {
-            throw new NotImplementedException();
+            m_OnUpdate?.Invoke(elapseSeconds, realElapseSeconds);
         }
     }
 }

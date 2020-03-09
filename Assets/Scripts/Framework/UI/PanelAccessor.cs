@@ -15,10 +15,15 @@ namespace Framework
                 return panel.url;
             }
 
-            protected void InvokeAwake(BasePanel panel,string name, GameObject obj, params object[] userData)
+            protected void InvokeInit(BasePanel panel, string name)
             {
                 panel.m_Valid = true;
                 panel.UIName = name;
+                panel.OnInit();
+            }
+
+            protected void InvokeAwake(BasePanel panel, GameObject obj, params object[] userData)
+            {
                 panel.gameObject = obj;
                 panel.OnAwake(userData);
             }

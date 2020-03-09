@@ -17,6 +17,11 @@ namespace Framework
                 mudule.LateUpdate(elapseSeconds, realElapseSeconds);
             }
 
+            protected static void InvokeFixedUpdate(FrameworkModuleBase mudule, float elapseSeconds, float realElapseSeconds)
+            {
+                mudule.FixedUpdate(elapseSeconds, realElapseSeconds);
+            }
+
             protected static void InvokeDestroy(FrameworkModuleBase mudule)
             {
                 mudule.OnDestroy();

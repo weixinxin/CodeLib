@@ -45,6 +45,7 @@ public enum EaseMethod
     BackEaseInOut,
     BackEaseOutIn,
 }
+/*
 public class EaseTest:MonoBehaviour
 {
     public EaseMethod method;
@@ -153,3 +154,4 @@ public class EaseTest:MonoBehaviour
 
 
 }
+*/

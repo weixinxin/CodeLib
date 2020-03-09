@@ -17,6 +17,10 @@ namespace Framework
         protected abstract void OnDestroy();
 
         protected virtual void Update(float deltaTime, float unscaledDeltaTime) { }
+
+        protected virtual void FixedUpdate(float deltaTime, float unscaledDeltaTime) { }
+
+        
     }
 
     public abstract class FrameworkModule<T> : FrameworkModuleBase where T : FrameworkModuleBase

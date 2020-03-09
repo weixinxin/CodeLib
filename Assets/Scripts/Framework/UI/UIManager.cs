@@ -133,9 +133,10 @@ namespace Framework
                 return;
             }
             BasePanel panel = (BasePanel)Activator.CreateInstance(type);
+            InvokeInit(panel, name);
             GameObject obj = InstantiatePanel(panel);
             m_Panels.Add(panel);
-            InvokeAwake(panel, name, obj, userData);
+            InvokeAwake(panel, obj, userData);
             m_IsDirty = true;
         }
 
