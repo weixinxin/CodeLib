@@ -148,17 +148,7 @@ namespace Framework
         GameObject InstantiatePanel(BasePanel panel)
         {
             string url = GetURL(panel);
-            string path = url.Replace('\\', '/').TrimEnd('/');
-            int index = path.LastIndexOf('/');
-            if (index == -1)
-            {
-                var exception = new UriFormatException(string.Format("Invalid URI: The URI scheme is not valid - {0}", url));
-                Debug.LogException(exception);
-                throw exception;
-            }
-            string dir = path.Substring(0, index);
-            string assetName = path.Substring(index + 1);
-            GameObject prefab = ResourceManager.Instance.LoadAsset<GameObject>(dir, assetName);
+            GameObject prefab = ResourceManager.Instance.LoadAsset<GameObject>(url);
             GameObject obj = UnityEngine.Object.Instantiate(prefab);
             obj.transform.SetParent(UIRoot,false);
             obj.transform.localScale = Vector3.one;

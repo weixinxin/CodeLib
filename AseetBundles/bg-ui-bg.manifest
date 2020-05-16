@@ -1,16 +1,18 @@
 ManifestFileVersion: 0
-CRC: 1603391712
+CRC: 2576041191
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 81d0a8d8d01eaa9fef7adc47991cdf7a
+    Hash: 0758fc281169576a42c41b4090f854ca
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 5ad585dd02dfb5016c0dad519eab8f49
+    Hash: cb3f6df5cbc4a2990c44c2787bc9553a
 HashAppended: 0
 ClassTypes:
-- Class: 49
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
   Script: {instanceID: 0}
 Assets:
-- Assets/LuaScripts/Examples/ExamplePanel.lua.txt
+- Assets/Scripts/Test/UI/Prefab/bg.jpg
 Dependencies: []

@@ -50,16 +50,14 @@ namespace Framework
             Debug.Log("Load asset from 【Resource】 folder");
         }
 
-        public T LoadAsset<T>(string dir, string assetName) where T : UnityEngine.Object
+        public T LoadAsset<T>(string assetPath) where T : UnityEngine.Object
         {
-            string path = string.Format("{0}/{1}", dir, assetName);
-            return Resources.Load<T>(path);
+            return Resources.Load<T>(assetPath);
         }
 
-        public IAsyncTask LoadAssetAsync<T>(string dir, string assetName, Action<bool, T> callback) where T : UnityEngine.Object
+        public IAsyncTask LoadAssetAsync<T>(string assetPath, Action<bool, T> callback) where T : UnityEngine.Object
         {
-            string path = string.Format("{0}/{1}", dir, assetName);
-            ResourceRequest reques = Resources.LoadAsync<T>(path);
+            ResourceRequest reques = Resources.LoadAsync<T>(assetPath);
             IAsyncTask task = new LoadTask<T>(reques, callback);
             return task;
         }
@@ -97,5 +95,6 @@ namespace Framework
             string[] split = scenePath.Split('-');
             return split[split.Length - 1];
         }
+
     }
 }

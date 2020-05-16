@@ -1,16 +1,23 @@
 ManifestFileVersion: 0
-CRC: 613012815
+CRC: 1358245490
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: scenes-switchsceneb.unity
+      Name: luascripts
       Dependencies: {}
     Info_1:
-      Name: scenes-switchscenea.unity
+      Name: scenes-switchsceneb.unity
       Dependencies: {}
     Info_2:
-      Name: scripts-test-scene-curtain
+      Name: scenes-switchscenea.unity
       Dependencies: {}
     Info_3:
       Name: scripts-test-ui-prefab
+      Dependencies:
+        Dependency_0: bg-ui-bg
+    Info_4:
+      Name: scripts-test-scene-curtain
+      Dependencies: {}
+    Info_5:
+      Name: bg-ui-bg
       Dependencies: {}

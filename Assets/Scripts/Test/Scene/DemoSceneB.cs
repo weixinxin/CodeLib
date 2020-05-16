@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Framework;
 public class DemoSceneB : BaseScene
 {
-    protected override string url => "Scenes/SwitchSceneB.unity";
+    protected override string url => "Assets/Scenes/SwitchSceneB.unity";
 
     protected override IEnumerator OnEnter(params object[] args)
     {

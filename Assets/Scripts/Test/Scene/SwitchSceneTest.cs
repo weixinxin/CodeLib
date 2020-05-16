@@ -22,13 +22,13 @@ public class SwitchSceneTest : MonoBehaviour
     void SwitchScene()
     {
         SceneManager.Instance.SwitchScene(SceneName);
-        UIManager.Instance.OpenUI("TestPanelAf");
+        //UIManager.Instance.OpenUI("TestPanelAf");
     }
 
     [Button("Load")]
     void Load()
     {
-        TextAsset text = ResourceManager.Instance.LoadAsset<TextAsset>("LuaScripts", "ExamplePanel.lua");
+        TextAsset text = ResourceManager.Instance.LoadAsset<TextAsset>("Assets/LuaScripts/ExamplePanel.lua");
         UnityEngine.Debug.Log(text.text);
     }
 
@@ -42,7 +42,7 @@ public class SwitchSceneTest : MonoBehaviour
             GameFramework.Register(new UIManager());
             GameFramework.Register(new SceneManager());
             SetLoader();
-            GameObject prefab = ResourceManager.Instance.LoadAsset<GameObject>("Scripts/Test/Scene/Curtain", "SceneCurtain");
+            GameObject prefab = ResourceManager.Instance.LoadAsset<GameObject>("Assets/Scripts/Test/Scene/Curtain/SceneCurtain.prefab");
             GameObject obj =  GameObject.Instantiate(prefab);
             DefaultSceneCurtain sceneCurtain = obj.GetComponent<DefaultSceneCurtain>();
             DontDestroyOnLoad(obj);

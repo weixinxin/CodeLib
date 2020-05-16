@@ -58,7 +58,7 @@ public class TestPanelAf : TestPanel
 {
     public override bool isFullScreen => true;
 
-    protected override string url => "Scripts/Test/UI/Prefab/FullPanel";
+    protected override string url => "Assets/Scripts/Test/UI/Prefab/FullPanel.prefab";
 
     public override void OnOpenFullBtnClick()
     {
@@ -75,7 +75,7 @@ public class TestPanelAs : TestPanel
 {
     public override bool isFullScreen => false;
 
-    protected override string url => "Scripts/Test/UI/Prefab/PartialPanel";
+    protected override string url => "Assets/Scripts/Test/UI/Prefab/PartialPanel.prefab";
 
     public override void OnOpenFullBtnClick()
     {
@@ -92,7 +92,7 @@ public class TestPanelBf : TestPanel
 {
     public override bool isFullScreen => true;
 
-    protected override string url => "Scripts/Test/UI/Prefab/FullPanel";
+    protected override string url => "Assets/Scripts/Test/UI/Prefab/FullPanel.prefab";
 
     public override void OnOpenFullBtnClick()
     {
@@ -109,7 +109,7 @@ public class TestPanelBs : TestPanel
 {
     public override bool isFullScreen => false;
 
-    protected override string url => "Scripts/Test/UI/Prefab/PartialPanel";
+    protected override string url => "Assets/Scripts/Test/UI/Prefab/PartialPanel.prefab";
 
     public override void OnOpenFullBtnClick()
     {
@@ -125,7 +125,7 @@ public class TestPanelCf : TestPanel
 {
     public override bool isFullScreen => true;
 
-    protected override string url => "Scripts/Test/UI/Prefab/FullPanel";
+    protected override string url => "Assets/Scripts/Test/UI/Prefab/FullPanel.prefab";
 
     public override void OnOpenFullBtnClick()
     {
@@ -142,7 +142,7 @@ public class TestPanelCs : TestPanel
 {
     public override bool isFullScreen => false;
 
-    protected override string url => "Scripts/Test/UI/Prefab/PartialPanel";
+    protected override string url => "Assets/Scripts/Test/UI/Prefab/PartialPanel.prefab";
 
     public override void OnOpenFullBtnClick()
     {
@@ -158,7 +158,7 @@ public class TestPanelDf : TestPanel
 {
     public override bool isFullScreen => true;
 
-    protected override string url => "Scripts/Test/UI/Prefab/FullPanel";
+    protected override string url => "Assets/Scripts/Test/UI/Prefab/FullPanel.prefab";
 
     public override void OnOpenFullBtnClick()
     {
@@ -175,7 +175,7 @@ public class TestPanelDs : TestPanel
 {
     public override bool isFullScreen => false;
 
-    protected override string url => "Scripts/Test/UI/Prefab/PartialPanel";
+    protected override string url => "Assets/Scripts/Test/UI/Prefab/PartialPanel.prefab";
 
     public override void OnOpenFullBtnClick()
     {

@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 55037158
+CRC: 650149796
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: a1712581a59e37b776b07756ba370344
+    Hash: 5fdba81f29ab4833d7b7ac2058ea499f
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 4a8014766416a50d4827898970aebeeb
+    Hash: 07f2a0aa770b059902e8740ded5d0cc2
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -38,4 +38,5 @@ ClassTypes:
 Assets:
 - Assets/Scripts/Test/UI/Prefab/FullPanel.prefab
 - Assets/Scripts/Test/UI/Prefab/PartialPanel.prefab
-Dependencies: []
+Dependencies:
+- D:/Git/CodeLib/AseetBundles/bg-ui-bg

@@ -84,7 +84,7 @@ namespace Framework
                 {
                     throw new Exception("Unload error! assetBundle == null");
                 }
-                assetBundle.Unload(false);
+                assetBundle.Unload(true);
                 assetBundle = null;
             }
         }
@@ -102,6 +102,8 @@ namespace Framework
         private List<AssetBundleObject> mTempList = new List<AssetBundleObject>(16);
 
         private ObjectPool<AssetBundleObject> objectPool = new ObjectPool<AssetBundleObject>(32);
+
+
         /// <summary>
         /// 依赖关系数据
         /// </summary>
@@ -130,6 +132,8 @@ namespace Framework
         private List<AssetBundleObject> mUnloadList;
 
         private string mDataPath;
+
+        public string dataPath => mDataPath;
 
         /// <summary>
         /// 构造函数
@@ -198,11 +202,10 @@ namespace Framework
                 ab.Unload(true);
                 ab = null;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw e;
             }
-
             //Debug.Log("AssetBundleLoadMgr dependsCount=" + mDependenciesDataList.Count);
         }
 

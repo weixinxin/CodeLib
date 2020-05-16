@@ -31,15 +31,14 @@ namespace Framework
 
         }
 
-        public T LoadAsset<T>(string dir, string assetName) where T : UnityEngine.Object
+        public T LoadAsset<T>(string assetPath) where T : UnityEngine.Object
         {
-            string path = mDataPath + GetAseetPath(dir, assetName);
-            return UnityEditor.AssetDatabase.LoadAssetAtPath<T>(path);
+            return UnityEditor.AssetDatabase.LoadAssetAtPath<T>(assetPath);
         }
 
-        public IAsyncTask LoadAssetAsync<T>(string dir, string assetName, Action<bool, T> callback) where T : UnityEngine.Object
+        public IAsyncTask LoadAssetAsync<T>(string assetPath, Action<bool, T> callback) where T : UnityEngine.Object
         {
-            T asset = LoadAsset<T>(dir, assetName);
+            T asset = LoadAsset<T>(assetPath);
             //可以在这里模拟加载延迟
             callback?.Invoke(asset != null, asset);
             return new EditorTask();
@@ -90,6 +89,7 @@ namespace Framework
         {
 
         }
+
     }
 }
 #endif

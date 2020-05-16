@@ -31,14 +31,14 @@ namespace Framework
             loader = assetLoader;
         }
 
-        public T LoadAsset<T>(string dir, string assetName) where T : UnityEngine.Object
+        public T LoadAsset<T>(string assetPath) where T : UnityEngine.Object
         {
-            return loader.LoadAsset<T>(dir, assetName);
+            return loader.LoadAsset<T>(assetPath);
         }
 
-        public IAsyncTask LoadAssetAsync<T>(string dir, string assetName, Action<bool, T> callback) where T : UnityEngine.Object
+        public IAsyncTask LoadAssetAsync<T>(string assetPath, Action<bool, T> callback) where T : UnityEngine.Object
         {
-            return loader.LoadAssetAsync(dir, assetName, callback);
+            return loader.LoadAssetAsync(assetPath, callback);
         }
 
         public void LoadScene(string scenePath, bool isAdditive = false)

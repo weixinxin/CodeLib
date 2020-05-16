@@ -5,7 +5,6 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
 using AssetBundleBrowser.AssetBundleDataSource;
-
 namespace AssetBundleBrowser
 {
     [System.Serializable]
@@ -358,9 +357,12 @@ namespace AssetBundleBrowser
 
             AssetBundleModel.Model.DataSource.BuildAssetBundles (buildInfo);
 
-            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
 
-            if(m_CopyToStreaming.state)
+            AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+            byte[] bytes = AssetManifestExport.Export();
+            File.WriteAllBytes($"{m_UserData.m_OutputPath}/AssetManifest", bytes);
+
+            if (m_CopyToStreaming.state)
                 DirectoryCopy(m_UserData.m_OutputPath, m_streamingPath);
         }
 

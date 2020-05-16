@@ -8,9 +8,9 @@ namespace Framework
     {
         void SetDataPath(string dataPath);
 
-        T LoadAsset<T>(string dir, string assetName) where T : UnityEngine.Object;
+        T LoadAsset<T>(string assetPath) where T : UnityEngine.Object;
 
-        IAsyncTask LoadAssetAsync<T>(string dir, string assetName, Action<bool, T> callback) where T : UnityEngine.Object;
+        IAsyncTask LoadAssetAsync<T>(string assetPath, Action<bool, T> callback) where T : UnityEngine.Object;
 
         void LoadScene(string scenePath, bool isAdditive);
 
