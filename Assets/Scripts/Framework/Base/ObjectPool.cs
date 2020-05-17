@@ -4,9 +4,10 @@ namespace Framework
 {
     public interface IRecyclable
     {
+        void Reset();
         void Clear();
     }
-    public class ObjectPool<T> where T : class, IRecyclable, new()
+    public class ObjectPool<T> where T : class, new()
     {
         private readonly Queue<T> mObjects;
 
@@ -18,17 +19,23 @@ namespace Framework
         {
             lock(mObjects)
             {
+                T obj;
                 if (mObjects.Count > 0)
                 {
-                    return mObjects.Dequeue();
+                    obj = mObjects.Dequeue();
                 }
-                return new T();
+                else
+                    obj = new T();
+                IRecyclable recyclable = obj as IRecyclable;
+                recyclable?.Reset();
+                return obj;
             }
         }
 
         public void Recycle(T obj)
         {
-            obj.Clear();
+            IRecyclable recyclable = obj as IRecyclable;
+            recyclable?.Clear();
             lock (mObjects)
             {
                 if (mObjects.Contains(obj))

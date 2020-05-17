@@ -72,6 +72,11 @@ namespace Framework
                 text = null;
                 packet = null;
             }
+
+            public void Reset()
+            {
+                
+            }
         }
         public static readonly int PacketHeadLength = sizeof(ushort);
 

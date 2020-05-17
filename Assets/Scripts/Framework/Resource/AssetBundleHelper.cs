@@ -78,6 +78,11 @@ namespace Framework
                 loadingDependenciesCount--;
             }
 
+            public void Reset()
+            {
+                
+            }
+
             public void Unload()
             {
                 if (assetBundle == null)
